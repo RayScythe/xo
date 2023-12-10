@@ -1,0 +1,1545 @@
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+#define NOMINMAX
+#include <windows.h>
+using namespace std;
+char s[10] = {};
+int moves, start, turn, firstmove, secondmove, thirdmove, fourthmove, fifthmove, sixthmove, seventhmove, eighthmove;
+static int plpoints = 0, botpoints = 0;
+void PrintXO();
+void StartGame();
+void delay(float number_of_seconds) {
+	int milli_seconds = 1000 * number_of_seconds;
+	clock_t start_time = clock();
+	while (clock() < start_time + milli_seconds);
+}
+void color(char c) {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (c == 'X')
+		SetConsoleTextAttribute(hConsole, 10);
+	else if (c == 'O')
+		SetConsoleTextAttribute(hConsole, 12);
+	else
+		SetConsoleTextAttribute(hConsole, 15);
+}
+void PrintHeader() {
+	color('X');
+	cout << "\t\t\t\t---------------------------------------------------------\n";
+	cout << "\t\t\t\t|";
+	color('O');
+	cout << "\t\t P L A Y   VS   3 B S I \t\t";
+	color('X');
+	cout << "| \n";
+	cout << "\t\t\t\t---------------------------------------------------------\n\n";
+	color(0);
+}
+void bot() {
+	system("cls");
+	if (turn == 1) {
+		firstmove = (rand() % 2) ? 1 : 9;
+		moves = firstmove;
+	}
+	else if (turn == 2) {
+		if (firstmove == 5 || firstmove == 6 || firstmove == 8)
+			moves = 9;
+		else if (firstmove == 1 || firstmove == 3 || firstmove == 7 || firstmove == 9)
+			moves = 5;
+		else if (firstmove == 2 || firstmove == 4)
+			moves = 1;
+		secondmove = moves;
+	}
+	else if (turn == 3) {
+		if (firstmove == 9) {
+			if (secondmove == 7 || secondmove == 3 || secondmove == 5)
+				moves = 1;
+			else if (secondmove == 4 || secondmove == 2 || secondmove == 6 || secondmove == 8)
+				moves = 5;
+			else if (secondmove == 1)
+				moves = 3;
+		}
+		else if (firstmove == 1) {
+			if (secondmove == 7 || secondmove == 3 || secondmove == 5)
+				moves = 9;
+			else if (secondmove == 4 || secondmove == 2 || secondmove == 6 || secondmove == 8)
+				moves = 5;
+			else if (secondmove == 9)
+				moves = 3;
+		}
+		thirdmove = moves;
+	}
+	else if (turn == 4) {
+		if (secondmove == 9) {
+			if (firstmove == 5) {
+				if (thirdmove == 3)
+					moves = 7;
+				else if (thirdmove == 7 || thirdmove == 1)
+					moves = 3;
+				else if (thirdmove == 2)
+					moves = 8;
+				else if (thirdmove == 8)
+					moves = 2;
+				else if (thirdmove == 4)
+					moves = 6;
+				else if (thirdmove == 6)
+					moves = 4;
+			}
+			else if (firstmove == 6) {
+				if (thirdmove == 4 || thirdmove == 7 || thirdmove == 2 || thirdmove == 8)
+					moves = 5;
+				else if (thirdmove == 1 || thirdmove == 3)
+					moves = 7;
+				else if (thirdmove == 5)
+					moves = 4;
+			}
+			else if (firstmove == 8) {
+				if (thirdmove == 5)
+					moves = 2;
+				else if (thirdmove == 3 || thirdmove == 6 || thirdmove == 4 || thirdmove == 2)
+					moves = 5;
+				else if (thirdmove == 1 || thirdmove == 7)
+					moves = 3;
+			}
+		}
+		if (secondmove == 1) {
+			if (firstmove == 4) {
+				if (thirdmove == 3 || thirdmove == 8 || thirdmove == 2 || thirdmove == 6)
+					moves = 5;
+				else if (thirdmove == 7 || thirdmove == 9)
+					moves = 3;
+				else if (thirdmove == 5)
+					moves = 6;
+			}
+			else if (firstmove == 2) {
+				if (s[5] == 88)
+					moves = 8;
+				else if (thirdmove == 7 || thirdmove == 6 || thirdmove == 4 || thirdmove == 8)
+					moves = 5;
+				else if (thirdmove == 3 || thirdmove == 9)
+					moves = 7;
+			}
+		}
+		else if (secondmove == 5) {
+			if (firstmove == 9) {
+				if (thirdmove == 6 || thirdmove == 2)
+					moves = 3;
+				else if (thirdmove == 3 || thirdmove == 1)
+					moves = 6;
+				else if (thirdmove == 8 || thirdmove == 4)
+					moves = 7;
+				else if (thirdmove == 7)
+					moves = 8;
+			}
+			else if (firstmove == 7) {
+				if (thirdmove == 1 || thirdmove == 3)
+					moves = 4;
+				else if (thirdmove == 2 || thirdmove == 4)
+					moves = 1;
+				else if (thirdmove == 6 || thirdmove == 8)
+					moves = 9;
+				else if (thirdmove == 9)
+					moves = 8;
+			}
+			else if (firstmove == 1) {
+				if (thirdmove == 9)
+					moves = 6;
+				else if (thirdmove == 2 || thirdmove == 6)
+					moves = 3;
+				else if (thirdmove == 8 || thirdmove == 4)
+					moves = 7;
+				else if (thirdmove == 7)
+					moves = 4;
+				else if (thirdmove == 3)
+					moves = 2;
+			}
+			else if (firstmove == 3) {
+				if (thirdmove == 1)
+					moves = 2;
+				else if (thirdmove == 2 || thirdmove == 4)
+					moves = 1;
+				else if (thirdmove == 6 || thirdmove == 8)
+					moves = 9;
+				else if (thirdmove == 9)
+					moves = 6;
+				else if (thirdmove == 7)
+					moves = 4;
+			}
+		}
+		fourthmove = moves;
+	}
+	else if (turn == 5) {
+		if (firstmove == 9) {
+			if (thirdmove == 3) {
+				if (fourthmove != 6)
+					moves = 6;
+				else
+					moves = 7;
+			}
+			else if (thirdmove == 5) {
+				if (fourthmove != 1)
+					moves = 1;
+				else if (secondmove == 4 || secondmove == 6)
+					moves = 7;
+				else if (secondmove == 2 || secondmove == 8)
+					moves = 3;
+			}
+			else if (thirdmove == 1) {
+				if (secondmove == 7) {
+					if (fourthmove != 5)
+						moves = 5;
+					else
+						moves = 3;
+				}
+				else if (secondmove == 3) {
+					if (fourthmove != 5)
+						moves = 5;
+					else
+						moves = 7;
+				}
+				else if (secondmove == 5) {
+					if (fourthmove == 3)
+						moves = 7;
+					else if (fourthmove == 7)
+						moves = 3;
+					else if (fourthmove == 2)
+						moves = 8;
+					else if (fourthmove == 8)
+						moves = 2;
+					else if (fourthmove == 4)
+						moves = 6;
+					else if (fourthmove == 6)
+						moves = 4;
+				}
+			}
+		}
+		else if (firstmove == 1) {
+			if (thirdmove == 3) {
+				if (fourthmove != 2)
+					moves = 2;
+				else
+					moves = 7;
+			}
+			else if (thirdmove == 5) {
+				if (fourthmove != 9)
+					moves = 9;
+				else if (secondmove == 4 || secondmove == 6)
+					moves = 3;
+				else if (secondmove == 2 || secondmove == 8)
+					moves = 7;
+			}
+			else if (thirdmove == 9) {
+				if (secondmove == 7) {
+					if (fourthmove != 5)
+						moves = 5;
+					else
+						moves = 3;
+				}
+				else if (secondmove == 3) {
+					if (fourthmove != 5)
+						moves = 5;
+					else
+						moves = 7;
+				}
+				else if (secondmove == 5) {
+					if (fourthmove == 3)
+						moves = 7;
+					else if (fourthmove == 7)
+						moves = 3;
+					else if (fourthmove == 2)
+						moves = 8;
+					else if (fourthmove == 8)
+						moves = 2;
+					else if (fourthmove == 4)
+						moves = 6;
+					else if (fourthmove == 6)
+						moves = 4;
+				}
+			}
+		}
+		fifthmove = moves;
+	}
+	else if (turn == 6) {
+		if (secondmove == 9) {
+			if (firstmove == 5) {
+				if (thirdmove == 3) {
+					if (s[8] == '8')
+						moves = 8;
+					else
+						moves = 2;
+				}
+				else if (thirdmove == 7 || thirdmove == 1) {
+					if (s[6] == '6')
+						moves = 6;
+					else
+						moves = 4;
+				}
+				else if (thirdmove == 6) {
+					if (fifthmove == 3)
+						moves = 7;
+					else if (fifthmove == 2 || fifthmove == 1)
+						moves = 8;
+					else if (fifthmove == 8)
+						moves = 2;
+					else if (fifthmove == 7)
+						moves = 3;
+				}
+				else if (thirdmove == 4) {
+					if (s[3] == '3')
+						moves = 3;
+					else
+						moves = 7;
+				}
+				else if (thirdmove == 2) {
+					if (s[7] == '7')
+						moves = 7;
+					else
+						moves = 3;
+				}
+				else if (thirdmove == 8) {
+					if (fifthmove == 3)
+						moves = 7;
+					else if (fifthmove == 4)
+						moves = 6;
+					else if (fifthmove == 6)
+						moves = 4;
+					else if (fifthmove == 1 || fifthmove == 7)
+						moves = 3;
+				}
+			}
+			else if (firstmove == 8) {
+				if (thirdmove == 5) {
+					if (fifthmove == 3)
+						moves = 7;
+					else if (fifthmove == 4)
+						moves = 6;
+					else if (fifthmove == 6)
+						moves = 4;
+					else if (fifthmove == 1 || fifthmove == 7)
+						moves = 3;
+				}
+				else if (thirdmove == 2) {
+					if (s[1] == '1')
+						moves = 1;
+					else
+						moves = 3;
+				}
+				else if (thirdmove == 1) {
+					if (s[6] == '6')
+						moves = 6;
+					else
+						moves = 5;
+				}
+				else if (thirdmove == 3) {
+					if (s[1] == '1')
+						moves = 1;
+					else
+						moves = 2;
+				}
+				else if (thirdmove == 4) {
+					if (s[1] == '1')
+						moves = 1;
+					else
+						moves = 7;
+				}
+				else if (thirdmove == 6) {
+					if (s[1] == '1')
+						moves = 1;
+					else
+						moves = 3;
+				}
+				else if (thirdmove == 7) {
+					if (s[6] == '6')
+						moves = 6;
+					else
+						moves = 1;
+				}
+			}
+			else if (firstmove == 6) {
+				if (thirdmove == 8) {
+					if (s[1] == '1')
+						moves = 1;
+					else
+						moves = 3;
+				}
+				else if (thirdmove == 7) {
+					if (s[1] == '1')
+						moves = 1;
+					else
+						moves = 4;
+				}
+				else if (thirdmove == 5) {
+					if (fifthmove == 8)
+						moves = 2;
+					else if (fifthmove == 7)
+						moves = 3;
+					else if (fifthmove == 1 || fifthmove == 2)
+						moves = 8;
+					else if (fifthmove == 3)
+						moves = 7;
+				}
+				else if (thirdmove == 4) {
+					if (s[1] == '1')
+						moves = 1;
+					else
+						moves = 7;
+				}
+				else if (thirdmove == 3) {
+					if (s[8] == '8')
+						moves = 8;
+					else
+						moves = 1;
+				}
+				else if (thirdmove == 2) {
+					if (s[1] == '1')
+						moves = 1;
+					else
+						moves = 3;
+				}
+				else if (thirdmove == 1) {
+					if (s[8] == '8')
+						moves = 8;
+					else
+						moves = 5;
+				}
+			}
+		}
+		else if (secondmove == 1)
+		{
+			if (firstmove == 2)
+			{
+				if (thirdmove == 3) {
+					if (s[4] == '4')
+						moves = 4;
+					else
+						moves = 9;
+				}
+				else if (thirdmove == 4) {
+					if (s[9] == '9')
+						moves = 9;
+					else
+						moves = 3;
+				}
+				else if (thirdmove == 5) {
+					if (fifthmove == 3 || fifthmove == 9)
+						moves = 7;
+					else if (fifthmove == 4)
+						moves = 6;
+					else if (fifthmove == 6)
+						moves = 4;
+					else if (fifthmove == 7)
+						moves = 3;
+				}
+				else if (thirdmove == 6) {
+					if (s[9] == '9')
+						moves = 9;
+					else
+						moves = 3;
+				}
+				else if (thirdmove == 7) {
+					if (s[9] == '9')
+						moves = 9;
+					else
+						moves = 8;
+				}
+				else if (thirdmove == 8) {
+					if (s[9] == '9')
+						moves = 9;
+					else
+						moves = 7;
+				}
+				else if (thirdmove == 9) {
+					if (s[4] == '4')
+						moves = 4;
+					else
+						moves = 5;
+				}
+			}
+			else if (firstmove == 4) {
+				if (thirdmove == 2) {
+					if (s[9] == '9')
+						moves = 9;
+					else
+						moves = 3;
+				}
+				else if (thirdmove == 3) {
+					if (s[9] == '9')
+						moves = 9;
+					else
+						moves = 6;
+				}
+				else if (thirdmove == 5) {
+					if (fifthmove == 2)
+						moves = 8;
+					else if (fifthmove == 8)
+						moves = 2;
+					else if (fifthmove == 3)
+						moves = 7;
+					else if (fifthmove == 7 || fifthmove == 9)
+						moves = 3;
+				}
+				else if (thirdmove == 6) {
+					if (s[9] == '9')
+						moves = 9;
+					else
+						moves = 3;
+				}
+				else if (thirdmove == 7) {
+					if (s[2] == '2')
+						moves = 2;
+					else
+						moves = 9;
+				}
+				else if (thirdmove == 8) {
+					if (s[9] == '9')
+						moves = 9;
+					else
+						moves = 7;
+				}
+				else if (thirdmove == 9) {
+					if (s[2] == '2')
+						moves = 2;
+					else
+						moves = 5;
+				}
+			}
+		}
+		else if (secondmove == 5) {
+			if (firstmove == 1) {
+				if (thirdmove == 2) {
+					if (s[7] == '7')
+						moves = 7;
+					else
+						moves = 4;
+				}
+				else if (thirdmove == 3) {
+					if (s[8] == '8')
+						moves = 8;
+					else
+						moves = 4;
+				}
+				else if (thirdmove == 4) {
+					if (s[3] == '3')
+						moves = 3;
+					else
+						moves = 2;
+				}
+				else if (thirdmove == 6) {
+					if (s[7] == '7')
+						moves = 7;
+					else
+						moves = 4;
+				}
+				else if (thirdmove == 7) {
+					if (s[6] == '6')
+						moves = 6;
+					else
+						moves = 2;
+				}
+				else if (thirdmove == 8) {
+					if (s[3] == '3')
+						moves = 3;
+					else
+						moves = 2;
+				}
+				else if (thirdmove == 9) {
+					if (s[4] == '4')
+						moves = 4;
+					else
+						moves = 7;
+				}
+			}
+			else if (firstmove == 3) {
+				if (thirdmove == 1) {
+					if (s[8] == '8')
+						moves = 8;
+					else
+						moves = 4;
+				}
+				else if (thirdmove == 2) {
+					if (s[9] == '9')
+						moves = 9;
+					else
+						moves = 6;
+				}
+				else if (thirdmove == 4) {
+					if (s[9] == '9')
+						moves = 9;
+					else
+						moves = 6;
+				}
+				else if (thirdmove == 6) {
+					if (s[1] == '1')
+						moves = 1;
+					else
+						moves = 2;
+				}
+				else if (thirdmove == 7) {
+					if (s[6] == '6')
+						moves = 6;
+					else
+						moves = 9;
+				}
+				else if (thirdmove == 8) {
+					if (s[1] == '1')
+						moves = 1;
+					else
+						moves = 2;
+				}
+				else if (thirdmove == 9) {
+					if (s[4] == '4')
+						moves = 4;
+					else
+						moves = 2;
+				}
+			}
+			else if (firstmove == 7) {
+				if (thirdmove == 1) {
+					if (s[6] == '6')
+						moves = 6;
+					else
+						moves = 2;
+				}
+				else if (thirdmove == 2) {
+					if (s[9] == '9')
+						moves = 9;
+					else
+						moves = 8;
+				}
+				else if (thirdmove == 3) {
+					if (s[6] == '6')
+						moves = 6;
+					else
+						moves = 9;
+				}
+				else if (thirdmove == 4) {
+					if (s[9] == '9')
+						moves = 9;
+					else
+						moves = 8;
+				}
+				else if (thirdmove == 6) {
+					if (s[1] == '1')
+						moves = 1;
+					else
+						moves = 4;
+				}
+				else if (thirdmove == 8) {
+					if (s[1] == '1')
+						moves = 1;
+					else
+						moves = 4;
+				}
+				else if (thirdmove == 9) {
+					if (s[2] == '2')
+						moves = 2;
+					else
+						moves = 4;
+				}
+			}
+			else if (firstmove == 9) {
+				if (thirdmove == 1) {
+					if (s[4] == '4')
+						moves = 4;
+					else
+						moves = 7;
+				}
+				else if (thirdmove == 2) {
+					if (s[7] == '7')
+						moves = 7;
+					else
+						moves = 8;
+				}
+				else if (thirdmove == 3) {
+					if (s[4] == '4')
+						moves = 4;
+					else
+						moves = 2;
+				}
+				else if (thirdmove == 4) {
+					if (s[3] == '3')
+						moves = 9;
+					else
+						moves = 6;
+				}
+				else if (thirdmove == 6) {
+					if (s[7] == '7')
+						moves = 7;
+					else
+						moves = 8;
+				}
+				else if (thirdmove == 7) {
+					if (s[2] == '2')
+						moves = 2;
+					else
+						moves = 4;
+				}
+				else if (thirdmove == 8) {
+					if (s[3] == '3')
+						moves = 3;
+					else
+						moves = 6;
+				}
+			}
+		}
+		sixthmove = moves;
+	}
+	else if (turn == 7) {
+		if (firstmove == 9) {
+			if (s[9] == s[3] && s[9] == s[7]) {
+				if (s[5] == '5')
+					moves = 5;
+				else if (s[8] == '8')
+					moves = 8;
+				else if (s[6] == '6')
+					moves = 8;
+			}
+			else if (s[9] == s[1] && s[9] == s[3]) {
+				if (s[6] == '6')
+					moves = 6;
+				else if (s[2] == '2')
+					moves = 2;
+				else if (s[5] == '5')
+					moves = 5;
+			}
+			else if (s[9] == s[1] && s[9] == s[7]) {
+				if (s[4] == '4')
+					moves = 4;
+				else if (s[8] == '8')
+					moves = 8;
+				else if (s[5] == '5')
+					moves = 5;
+			}
+			else if (s[9] == s[5] && s[9] == s[7]) {
+				if (s[8] == '8')
+					moves = 8;
+				else if (s[3] == '3')
+					moves = 3;
+				else if (s[1] == '1')
+					moves = 1;
+			}
+			else if (s[9] == s[5] && s[9] == s[3]) {
+				if (s[6] == '6')
+					moves = 6;
+				else if (s[7] == '7')
+					moves = 7;
+				else if (s[1] == '1')
+					moves = 1;
+			}
+			else if (fifthmove == 4 || fifthmove == 8) {
+				if (s[7] == '7')
+					moves = 7;
+				else
+					moves = 3;
+			}
+			else if (fifthmove == 6 || fifthmove == 2) {
+				if (s[3] == '3')
+					moves = 3;
+				else
+					moves = 7;
+			}
+		}
+		else if (firstmove == 1) {
+			if (s[1] == s[3] && s[1] == s[7]) {
+				if (s[5] == '5')
+					moves = 5;
+				else if (s[4] == '4')
+					moves = 4;
+				else if (s[2] == '2')
+					moves = 2;
+			}
+			else if (s[1] == s[9] && s[1] == s[3]) {
+				if (s[4] == '6')
+					moves = 6;
+				else if (s[2] == '2')
+					moves = 2;
+				else if (s[5] == '5')
+					moves = 5;
+			}
+			else if (s[1] == s[9] && s[1] == s[7]) {
+				if (s[4] == '4')
+					moves = 4;
+				else if (s[8] == '8')
+					moves = 8;
+				else if (s[5] == '5')
+					moves = 5;
+			}
+			else if (s[1] == s[5] && s[1] == s[3]) {
+				if (s[2] == '2')
+					moves = 2;
+				else if (s[7] == '7')
+					moves = 7;
+				else if (s[9] == '9')
+					moves = 9;
+			}
+			else if (s[1] == s[5] && s[1] == s[7]) {
+				if (s[4] == '4')
+					moves = 4;
+				else if (s[9] == '9')
+					moves = 9;
+				else if (s[3] == '3')
+					moves = 3;
+			}
+			else if (fifthmove == 4 || fifthmove == 8) {
+				if (s[7] == '7')
+					moves = 7;
+				else
+					moves = 3;
+			}
+			else if (fifthmove == 6 || fifthmove == 2) {
+				if (s[3] == '3')
+					moves = 3;
+				else
+					moves = 7;
+			}
+		}
+		seventhmove = moves;
+	}
+	else if (turn == 8) {
+		if (secondmove == 9) {
+			if (firstmove == 5) {
+				if (fourthmove == 2) {
+					if (sixthmove == 3) {
+						if (fifthmove == 1) {
+							if (s[6] == '6')
+								moves = 6;
+							else
+								moves = 4;
+						}
+						else if (fifthmove == 7) {
+							if (s[6] == '6')
+								moves = 6;
+							else
+								moves = 1;
+						}
+					}
+					else if (sixthmove == 4) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 3;
+					}
+					else if (sixthmove == 6) {
+						if (s[3] == '3')
+							moves = 3;
+						else
+							moves = 7;
+					}
+					else if (sixthmove == 7) {
+						if (s[4] == '4')
+							moves = 4;
+						else
+							moves = 6;
+					}
+				}
+				if (fourthmove == 3) {
+					if (s[2] == '2')
+						moves = 2;
+					else
+						moves = 8;
+				}
+				if (fourthmove == 4) {
+					if (sixthmove == 2 || sixthmove == 8) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 3;
+					}
+					else if (sixthmove == 3) {
+						if (s[2] == '2')
+							moves = 2;
+						else
+							moves = 8;
+					}
+					else if (sixthmove == 7) {
+						if (s[1] == '1')
+							moves = 1;
+						else
+							moves = 2;
+					}
+				}
+				if (fourthmove == 6) {
+					if (s[8] == '8')
+						moves = 8;
+					else
+						moves = 2;
+				}
+				if (fourthmove == 7 || fourthmove == 8) {
+					if (s[6] == '6')
+						moves = 6;
+					else
+						moves = 4;
+				}
+			}
+			else if (firstmove == 6) {
+				if (fourthmove == 4) {
+					if (sixthmove == 2 || sixthmove == 8) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 3;
+					}
+					else if (sixthmove == 3) {
+						if (s[8] == '8')
+							moves = 8;
+						else
+							moves = 2;
+					}
+					else if (sixthmove == 7) {
+						if (s[1] == '1')
+							moves = 1;
+						else
+							moves = 2;
+					}
+				}
+				else if (fourthmove == 5) {
+					if (thirdmove == 2) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 4;
+					}
+					else if (thirdmove == 4) {
+						if (s[8] == '8')
+							moves = 8;
+						else
+							moves = 3;
+					}
+					else if (thirdmove == 7) {
+						if (s[2] == '2')
+							moves = 2;
+						else
+							moves = 3;
+					}
+					else if (thirdmove == 8) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 4;
+					}
+				}
+				else if (fourthmove == 7) {
+					if (thirdmove == 1) {
+						if (s[3] == '3')
+							moves = 3;
+						else
+							moves = 2;
+					}
+					else if (thirdmove == 3) {
+						if (s[5] == '5')
+							moves = 5;
+						else
+							moves = 4;
+					}
+				}
+			}
+			else if (firstmove == 8) {
+				if (fourthmove == 2) {
+					if (sixthmove == 3) {
+						if (fifthmove == 7) {
+							if (s[1] == '1')
+								moves = 6;
+							else
+								moves = 1;
+						}
+						else if (fifthmove == 1) {
+							if (s[6] == '6')
+								moves = 6;
+							else
+								moves = 4;
+						}
+					}
+					else if (sixthmove == 4) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 3;
+					}
+					else if (sixthmove == 6) {
+						if (s[3] == '3')
+							moves = 3;
+						else
+							moves = 7;
+					}
+					else if (sixthmove == 7) {
+						if (s[6] == '6')
+							moves = 6;
+						else
+							moves = 4;
+					}
+				}
+				else if (fourthmove == 3) {
+					if (thirdmove == 1) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 4;
+					}
+					else if (thirdmove == 7) {
+						if (s[5] == '5')
+							moves = 5;
+						else
+							moves = 2;
+					}
+				}
+				else if (fourthmove == 5) {
+					if (thirdmove == 2) {
+						if (s[6] == '6')
+							moves = 6;
+						else
+							moves = 7;
+					}
+					else if (thirdmove == 3 || thirdmove == 6) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 4;
+					}
+					else if (thirdmove == 4) {
+						if (s[3] == '3')
+							moves = 3;
+						else
+							moves = 2;
+					}
+				}
+			}
+		}
+		else if (secondmove == 1) {
+			if (firstmove == 2) {
+				if (fourthmove == 5) {
+					if (thirdmove == 4 || thirdmove == 6) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 8;
+					}
+					else if (thirdmove == 7) {
+						if (s[6] == '6')
+							moves = 6;
+						else
+							moves = 3;
+					}
+					else if (thirdmove == 8) {
+						if (s[4] == '4')
+							moves = 4;
+						else
+							moves = 3;
+					}
+				}
+				else if (fourthmove == 7) {
+					if (thirdmove == 3) {
+						if (s[5] == '5')
+							moves = 5;
+						else
+							moves = 8;
+					}
+					else if (thirdmove == 9) {
+						if (s[3] == '3')
+							moves = 3;
+						else
+							moves = 6;
+					}
+				}
+				else if (fourthmove == 8) {
+					if (sixthmove == 3) {
+						if (s[4] == '4')
+							moves = 4;
+						else
+							moves = 6;
+					}
+					else if (sixthmove == 4 || sixthmove == 6) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 3;
+					}
+					else if (sixthmove == 7) {
+						if (fifthmove == 3) {
+							if (s[4] == '4')
+								moves = 4;
+							else
+								moves = 9;
+						}
+						else if (fifthmove == 9) {
+							if (s[4] == '4')
+								moves = 4;
+							else
+								moves = 6;
+						}
+					}
+				}
+			}
+			else if (firstmove == 4) {
+				if (fourthmove == 3) {
+					if (thirdmove == 7) {
+						if (s[5] == '5')
+							moves = 5;
+						else
+							moves = 6;
+					}
+					else if (thirdmove == 9) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 8;
+					}
+				}
+				else if (fourthmove == 5) {
+					if (thirdmove == 2) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 8;
+					}
+					else if (thirdmove == 3) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 8;
+					}
+					else if (thirdmove == 6) {
+						if (s[2] == '2')
+							moves = 2;
+						else
+							moves = 7;
+					}
+					else if (thirdmove == 8) {
+						if (s[3] == '3')
+							moves = 3;
+						else
+							moves = 4;
+					}
+				}
+				else if (fourthmove == 6) {
+					if (sixthmove == 2 || sixthmove == 8) {
+						if (s[3] == '3')
+							moves = 3;
+						else
+							moves = 7;
+					}
+					else if (sixthmove == 3) {
+						if (fifthmove == 7)
+						{
+							if (s[9] == '9')
+								moves = 9;
+							else
+								moves = 2;
+						}
+						else if (fifthmove == 9)
+						{
+							if (s[2] == '2')
+								moves = 2;
+							else
+								moves = 8;
+						}
+					}
+					else if (sixthmove == 7) {
+						if (s[8] == '8')
+							moves = 8;
+						else
+							moves = 2;
+					}
+				}
+			}
+		}
+		else if (secondmove == 5) {
+			if (firstmove == 1) {
+				if (fourthmove == 2) {
+					if (s[6] == '6')
+						moves = 6;
+					else
+						moves = 9;
+				}
+				else if (fourthmove == 3) {
+					if (thirdmove == 2) {
+						if (s[6] == '6')
+							moves = 6;
+						else
+							moves = 8;
+					}
+					else if (thirdmove == 6) {
+						if (s[8] == '8')
+							moves = 8;
+						else
+							moves = 9;
+					}
+				}
+				else if (fourthmove == 4) {
+					if (s[8] == '8')
+						moves = 8;
+					else
+						moves = 9;
+				}
+				else if (fourthmove == 6) {
+					if (s[3] == '3')
+						moves = 3;
+					else
+						moves = 2;
+				}
+				else if (fourthmove == 7) {
+					if (thirdmove == 4) {
+						if (s[8] == '8')
+							moves = 8;
+						else
+							moves = 6;
+					}
+					else if (thirdmove == 8) {
+						if (s[6] == '6')
+							moves = 6;
+						else
+							moves = 9;
+					}
+				}
+			}
+			else if (firstmove == 3) {
+				if (fourthmove == 1) {
+					if (thirdmove == 2) {
+						if (s[4] == '4')
+							moves = 4;
+						else
+							moves = 8;
+					}
+					else if (thirdmove == 4) {
+						if (s[8] == '8')
+							moves = 8;
+						else
+							moves = 7;
+					}
+				}
+				else if (fourthmove == 2) {
+					if (s[6] == '6')
+						moves = 6;
+					else
+						moves = 9;
+				}
+				else if (fourthmove == 4) {
+					if (s[1] == '1')
+						moves = 1;
+					else
+						moves = 2;
+				}
+				else if (fourthmove == 6) {
+					if (s[8] == '8')
+						moves = 8;
+					else
+						moves = 7;
+				}
+				else if (fourthmove == 9) {
+					if (thirdmove == 6) {
+						if (s[8] == '8')
+							moves = 8;
+						else
+							moves = 4;
+					}
+					else if (thirdmove == 8) {
+						if (s[7] == '7')
+							moves = 7;
+						else
+							moves = 4;
+					}
+				}
+			}
+			else if (firstmove == 7) {
+				if (fourthmove == 1) {
+					if (thirdmove == 2) {
+						if (s[6] == '6')
+							moves = 6;
+						else
+							moves = 3;
+					}
+					else if (thirdmove == 4) {
+						if (s[2] == '2')
+							moves = 2;
+						else
+							moves = 6;
+					}
+				}
+				else if (fourthmove == 4) {
+					if (thirdmove == 1) {
+						if (s[8] == '8')
+							moves = 8;
+						else
+							moves = 9;
+					}
+					else if (thirdmove == 3) {
+						if (s[1] == '1')
+							moves = 1;
+						else
+							moves = 2;
+					}
+				}
+				else if (fourthmove == 8) {
+					if (s[6] == '6')
+						moves = 6;
+					else
+						moves = 3;
+				}
+				else if (fourthmove == 9) {
+					if (thirdmove == 6) {
+						if (s[2] == '2')
+							moves = 2;
+						else
+							moves = 3;
+					}
+					else if (thirdmove == 8) {
+						if (s[6] == '6')
+							moves = 6;
+						else
+							moves = 2;
+					}
+				}
+			}
+			else if (firstmove == 9) {
+				if (fourthmove == 3) {
+					if (thirdmove == 2) {
+						if (s[1] == '1')
+							moves = 1;
+						else
+							moves = 4;
+					}
+					else if (thirdmove == 6) {
+						if (s[2] == '2')
+							moves = 2;
+						else
+							moves = 4;
+					}
+				}
+				else if (fourthmove == 6) {
+					if (thirdmove == 1) {
+						if (s[3] == '3')
+							moves = 3;
+						else
+							moves = 2;
+					}
+					else if (thirdmove == 3) {
+						if (s[8] == '8')
+							moves = 8;
+						else
+							moves = 7;
+					}
+				}
+				else if (fourthmove == 7) {
+					if (thirdmove == 4) {
+						if (s[1] == '1')
+							moves = 1;
+						else
+							moves = 2;
+					}
+					else if (thirdmove == 8) {
+						if (s[4] == '4')
+							moves = 4;
+						else
+							moves = 2;
+					}
+				}
+				else if (fourthmove == 8) {
+					if (s[6] == '6')
+						moves = 6;
+					else
+						moves = 3;
+				}
+			}
+		}
+		eighthmove = moves;
+	}
+	else if (turn == 9) {
+		if (s[2] == '2')
+			moves = 2;
+		else if (s[8] == '8')
+			moves = 8;
+		else if (s[4] == '4')
+			moves = 4;
+		else if (s[6] == '6')
+			moves = 6;
+
+	}
+	s[moves] = (start == 0) ? 88 : 79;
+}
+void player() {
+	system("cls");
+	PrintXO();
+	if (start == 0 && turn == 2)
+		cout << "       The bot started\n\n";
+	if (turn == 1)
+		cout << "        Start the game\n\n";
+	cout << "Enter a number : ";
+	cin >> moves;
+	while (moves < 1 || moves > 9 || cin.fail() || s[moves] == 'X' || s[moves] == 'O') {
+		system("cls");
+		system("color 07");
+		PrintXO();
+		if (cin.fail()) {
+			cout << "Invalid input. Please enter an integer From 1 to 9 : " << endl;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cin >> moves;
+			continue;
+		}
+		if (moves < 1 || moves > 9) {
+			cout << "Hey! Where do you want this to be? Outside the borders?" << endl << "Enter another number From 1 to 9 : ";
+			cin >> moves;
+			continue;
+		}
+		if ((s[moves] == 'X' || s[moves] == 'O') && (moves >= 1 && moves <= 9)) {
+			cout << "You can't override taken squares" << endl << "Enter another number : ";
+			cin >> moves;
+			continue;
+		}
+	}
+	switch (turn) {
+	case 1: firstmove = moves; break;
+	case 2: secondmove = moves; break;
+	case 3: thirdmove = moves; break;
+	case 4: fourthmove = moves; break;
+	case 5: fifthmove = moves; break;
+	case 6: sixthmove = moves; break;
+	case 7: seventhmove = moves; break;
+	case 8: eighthmove = moves; break;
+	}
+	s[moves] = (start == 1) ? 88 : 79;
+}
+void PrintXO() {
+	PrintHeader();
+	cout << "         |         |    \n" << "    ";
+	color(s[7]);
+	cout << s[7];
+	color(0);
+	cout << "    |    ";
+	color(s[8]);
+	cout << s[8];
+	color(0);
+	cout << "    |    ";
+	color(s[9]);
+	cout << s[9];
+	color(0);
+	cout << "\n         |         |    \n---------|---------|---------\n         |         |    \n    ";
+	color(s[4]);
+	cout << s[4];
+	color(0);
+	cout << "    |    ";
+	color(s[5]);
+	cout << s[5];
+	color(0);
+	cout << "    |    ";
+	color(s[6]);
+	cout << s[6];
+	color(0);
+	cout << "\n         |         |    \n---------|---------|---------\n         |         |    \n    ";
+	color(s[1]);
+	cout << s[1];
+	color(0);
+	cout << "    |    ";
+	color(s[2]);
+	cout << s[2];
+	color(0);
+	cout << "    |    ";
+	color(s[3]);
+	cout << s[3];
+	color(0);
+	cout << "\n         |         |    " << endl;
+}
+void ResetGame() {
+	string temp;
+	firstmove = 0; secondmove = 0; thirdmove = 0; fourthmove = 0; fifthmove = 0; sixthmove = 0; seventhmove = 0; eighthmove = 0;
+	for (int i = 49; i < 59; i++)
+		s[i - 48] = (char)i;
+	system("cls");
+	system("color 0F");
+	PrintXO();
+}
+void PlayerWon() {
+	for (int i = 0; i < 10; i++) {
+		if (s[i] != 'X' && s[i] != 'O')
+			s[i] = ' ';
+	}
+	system("cls");
+	string temp;
+	PrintXO();
+	system("color 20");
+	plpoints++;
+	cout << "You won! Congratulations!!!\n";
+	cout << "Player : " << plpoints << endl << "3bsi : " << botpoints << endl;
+	delay(4);
+	StartGame();
+}
+void BotWon() {
+	for (int i = 0; i < 10; i++) {
+		if (s[i] != 'X' && s[i] != 'O')
+			s[i] = ' ';
+	}
+	system("cls");
+	string temp;
+	PrintXO();
+	system("color 40");
+	botpoints++;
+	cout << "The bot won!" << endl;
+	cout << "Player : " << plpoints << "\n3bsi : " << botpoints << endl;
+	delay(4);
+	StartGame();
+}
+void Tie() {
+	for (int i = 0; i < 10; i++) {
+		if (s[i] != 'X' && s[i] != 'O')
+			s[i] = ' ';
+	}
+	system("cls");
+	string temp;
+	PrintXO();
+	system("color 60");
+	cout << "It's a tie!" << endl;
+	cout << "Player : " << plpoints << "\n3bsi : " << botpoints << endl;
+	delay(4);
+	StartGame();
+}
+void StartGame() {
+	static int NumberOfGames = 0;
+	string temp;
+	ResetGame();
+	NumberOfGames++;
+	start = rand() % 2;
+	if (start == 0) {
+		for (turn = 1; turn <= 9; turn++) {
+			if (turn % 2 == 1) {
+				bot();
+				if ((s[1] == 88 && s[1] == s[2] && s[1] == s[3]) || (s[1] == 88 && s[1] == s[4] && s[1] == s[7]) || (s[1] == 88 && s[1] == s[5] && s[1] == s[9]) ||
+					(s[2] == 88 && s[2] == s[5] && s[2] == s[8]) || (s[3] == 88 && s[3] == s[5] && s[3] == s[7]) || (s[3] == 88 && s[3] == s[6] && s[3] == s[9]) ||
+					(s[4] == 88 && s[4] == s[5] && s[4] == s[6]) || (s[7] == 88 && s[7] == s[8] && s[7] == s[9])) {
+					BotWon();
+				}
+			}
+			else {
+				player();
+				if ((s[1] == 79 && s[1] == s[2] && s[1] == s[3]) || (s[1] == 79 && s[1] == s[4] && s[1] == s[7]) || (s[1] == 79 && s[1] == s[5] && s[1] == s[9]) ||
+					(s[2] == 79 && s[2] == s[5] && s[2] == s[8]) || (s[3] == 79 && s[3] == s[5] && s[3] == s[7]) || (s[3] == 79 && s[3] == s[6] && s[3] == s[9]) ||
+					(s[4] == 79 && s[4] == s[5] && s[4] == s[6]) || (s[7] == 79 && s[7] == s[8] && s[7] == s[9])) {
+					PlayerWon();
+				}
+			}
+		}
+	}
+	else {
+		for (turn = 1; turn <= 9; turn++) {
+			if (turn % 2 == 1) {
+				player();
+				if ((s[1] == 88 && s[1] == s[2] && s[1] == s[3]) || (s[1] == 88 && s[1] == s[4] && s[1] == s[7]) || (s[1] == 88 && s[1] == s[5] && s[1] == s[9]) ||
+					(s[2] == 88 && s[2] == s[5] && s[2] == s[8]) || (s[3] == 88 && s[3] == s[5] && s[3] == s[7]) || (s[3] == 88 && s[3] == s[6] && s[3] == s[9]) ||
+					(s[4] == 88 && s[4] == s[5] && s[4] == s[6]) || (s[7] == 88 && s[7] == s[8] && s[7] == s[9])) {
+					PlayerWon();
+				}
+			}
+			else {
+				bot();
+				if ((s[1] == 79 && s[1] == s[2] && s[1] == s[3]) || (s[1] == 79 && s[1] == s[4] && s[1] == s[7]) || (s[1] == 79 && s[1] == s[5] && s[1] == s[9]) ||
+					(s[2] == 79 && s[2] == s[5] && s[2] == s[8]) || (s[3] == 79 && s[3] == s[5] && s[3] == s[7]) || (s[3] == 79 && s[3] == s[6] && s[3] == s[9]) ||
+					(s[4] == 79 && s[4] == s[5] && s[4] == s[6]) || (s[7] == 79 && s[7] == s[8] && s[7] == s[9])) {
+					BotWon();
+				}
+			}
+		}
+	}
+	Tie();
+}
+int main() {
+	srand((unsigned)time(0));
+	StartGame();
+	return 0;
+}
